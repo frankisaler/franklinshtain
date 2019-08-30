@@ -50,9 +50,9 @@ class go(unittest.TestCase):
         Select(driver.find_element_by_id("BirthYear")).select_by_visible_text(self.person['year'])
         driver.find_element_by_id("iSignupAction").click()
         sleep(6)
-        screenshot('1.png', region=(354, 396, 180, 80))
+        screenshot('temp\1.png', region=(354, 396, 180, 80))
         s3 = boto3.client('s3')
-        s3.upload_file('1.png', 'franki', '1.png', ExtraArgs={'ACL': 'public-read'})
+        s3.upload_file('temp\1.png', 'franki', '1.png', ExtraArgs={'ACL': 'public-read'})
         captch = captcha('https://hb.bizmrg.com/franki/1.png')
         answer = captch['solution']['text']
         look = r'[\S]+'
