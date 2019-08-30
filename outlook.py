@@ -64,6 +64,8 @@ class go(unittest.TestCase):
             answ = fv[0]
         mt(602, 507)
         tp(answ)
+        json_file = r'temp\outlook.json'
+        write_json(json_file)
         sleep(20)
         driver.close()
     
