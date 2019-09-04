@@ -14,8 +14,8 @@ import logging
 from botocore.exceptions import ClientError
 from guicontrol import *
 
-class go(unittest.TestCase):
-    def setUp(self):
+class out(unittest.TestCase):
+    def outlook_setUp(self):
         self.person = jload()
         # AppDynamics will automatically override this web driver
         # as documented in https://docs.appdynamics.com/display/PRO44/Write+Your+First+Script
@@ -25,34 +25,44 @@ class go(unittest.TestCase):
         self.verificationErrors = []
         self.accept_next_alert = True
     
-    def outlook(self):
+    def outlook_start(self):
         driver = self.driver
         driver.get("https://outlook.live.com/owa/")
         driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Free Outlook email and calendar'])[2]/following::span[1]").click()
         driver.find_element_by_id("MemberName").clear()
-        driver.find_element_by_id("MemberName").send_keys(self.person['login'])
-        driver.find_element_by_id("iSignupAction").click()
+        sleep(3)
+        tp2(self.person['login'])
+        press('tab')
+        press('tab')
+        press('enter')
         driver.find_element_by_id("PasswordInput").clear()
-        driver.find_element_by_id("PasswordInput").send_keys(self.person['password'])
+        mt(x=436, y=396)
+        tp2(self.person['password'])
         driver.find_element_by_id("iSignupAction").click()
         driver.find_element_by_id("FirstName").clear()
-        driver.find_element_by_id("FirstName").send_keys(self.person['first'])
-        driver.find_element_by_id("LastName").clear()
-        driver.find_element_by_id("LastName").send_keys(self.person['last'])
+        sleep(3)
+        mt(x=398, y=441)
+        tp2(self.person['first'])
+        sleep(3)
+        mt(x=391, y=495)
+        tp2(self.person['last'])
         driver.find_element_by_id("iSignupAction").click()
         driver.find_element_by_id("BirthMonth").click()
+        sleep(3)
         Select(driver.find_element_by_id("BirthMonth")).select_by_visible_text(self.person['mounth'].title())
         driver.find_element_by_id("BirthMonth").click()
         driver.find_element_by_id("BirthDay").click()
+        sleep(3)
         Select(driver.find_element_by_id("BirthDay")).select_by_visible_text(self.person['day'])
         driver.find_element_by_id("BirthDay").click()
         driver.find_element_by_id("BirthYear").click()
+        sleep(3)
         Select(driver.find_element_by_id("BirthYear")).select_by_visible_text(self.person['year'])
         driver.find_element_by_id("iSignupAction").click()
         sleep(6)
-        screenshot('temp\1.png', region=(354, 396, 180, 80))
+        screenshot(r'temp\1.png', region=(354, 396, 180, 80))
         s3 = boto3.client('s3')
-        s3.upload_file('temp\1.png', 'franki', '1.png', ExtraArgs={'ACL': 'public-read'})
+        s3.upload_file(r'temp\1.png', 'franki', '1.png', ExtraArgs={'ACL': 'public-read'})
         captch = captcha('https://hb.bizmrg.com/franki/1.png')
         answer = captch['solution']['text']
         look = r'[\S]+'
@@ -62,8 +72,10 @@ class go(unittest.TestCase):
             answ = fv[0] + fv[1]
         else:
             answ = fv[0]
-        mt(602, 507)
+        mt(x=602, y=507)
         tp(answ)
+        services = 'outlook.json'
+        write_json(services)
         sleep(20)
         driver.close()
     

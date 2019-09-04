@@ -3,7 +3,7 @@ from time import sleep
 from random import randint
 
 def speed():
-	spd = randint(1, 10)
+	spd = randint(1, 3)
 	floatspd = spd / 10
 	speed = float(floatspd)
 	return speed
@@ -36,9 +36,9 @@ def tp4(write):
 		b += 1
 	sleep(2)
 
-def mt(pos1, pos2):
+def mt(x=300, y=400):
 	spd = speed()
-	moveTo(pos1, pos2, spd)
+	moveTo(x, y, spd)
 	click()
 	sleep(3)
 

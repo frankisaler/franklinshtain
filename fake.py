@@ -4,6 +4,9 @@ from python3_anticaptcha import ImageToTextTask
 import json
 from datetime import datetime
 from connect import *
+import boto3
+import logging
+from botocore.exceptions import ClientError
 
 def first_name():
 	with open(r'data\first.txt', 'r', encoding='UTF-8') as f:
@@ -95,3 +98,35 @@ def jload():
 	with open(r'temp\person.json', 'r') as p:
 		jlo = json.load(p)
 		return jlo[0]
+
+def write_outlook_json():
+	json_file = r'temp\outlook.json'
+	write_dict = jload()
+	s3 = boto3.client('s3')
+	with open(json_file, 'wb') as f:
+		s3.download_fileobj('franki', 'outlook.json', f)
+	try:
+		data = json.load(open(json_file))
+	except:
+		data = []
+	data.append(write_dict)
+	with open(json_file, 'w') as file:
+		json.dump(data, file, indent=2)
+	s3.upload_file(json_file, 'franki', 'outlook.json')
+
+def write_instagram_json(tel_number):
+	telephone = {'phone':tel_number}
+	json_file = r'temp\instagram.json'
+	write_dict = jload()
+	s3 = boto3.client('s3')
+	with open(json_file, 'wb') as f:
+		s3.download_fileobj('franki', 'instagram.json', f)
+	try:
+		data = json.load(open(json_file))
+	except:
+		data = []
+	data.append(write_dict)
+	data.append(telephone)
+	with open(json_file, 'w') as file:
+		json.dump(data, file, indent=2)
+	s3.upload_file(json_file, 'franki', 'instagram.json')
